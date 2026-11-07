@@ -1,0 +1,18 @@
+services:
+  app:
+    build: .
+    container_name: workflow-engine
+    ports:
+      - "${PORT:-8000}:8000"
+    environment:
+      - PORT=8000
+      - COMMAND_LOG_PATH=/app/data/command_log.jsonl
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 5s
+    restart: unless-stopped
